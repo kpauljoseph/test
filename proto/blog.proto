@@ -1,0 +1,66 @@
+syntax = "proto3";
+
+package blog;
+
+option go_package = "github.com/kpauljoseph/test/proto/blog";
+
+import "google/protobuf/timestamp.proto";
+
+service BlogService {
+  rpc CreatePost(CreatePostRequest) returns (CreatePostResponse);
+  rpc ReadPost(ReadPostRequest) returns (ReadPostResponse);
+  rpc UpdatePost(UpdatePostRequest) returns (UpdatePostResponse);
+  rpc DeletePost(DeletePostRequest) returns (DeletePostResponse);
+}
+
+message BlogPost {
+  string post_id = 1;
+  string title = 2;
+  string content = 3;
+  string author = 4;
+  google.protobuf.Timestamp publication_date = 5;
+  repeated string tags = 6;
+}
+
+message CreatePostRequest {
+  string title = 1;
+  string content = 2;
+  string author = 3;
+  repeated string tags = 4;
+}
+
+message CreatePostResponse {
+  BlogPost post = 1;
+  string error = 2;
+}
+
+message ReadPostRequest {
+  string post_id = 1;
+}
+
+message ReadPostResponse {
+  BlogPost post = 1;
+  string error = 2;
+}
+
+message UpdatePostRequest {
+  string post_id = 1;
+  string title = 2;
+  string content = 3;
+  string author = 4;
+  repeated string tags = 5;
+}
+
+message UpdatePostResponse {
+  BlogPost post = 1;
+  string error = 2;
+}
+
+message DeletePostRequest {
+  string post_id = 1;
+}
+
+message DeletePostResponse {
+  bool success = 1;
+  string error = 2;
+}
