@@ -10,8 +10,8 @@ GOMOD=$(GOCMD) mod
 GOFMT=gofmt
 
 # Binary names
-SERVER_BINARY=blog-server
-CLIENT_BINARY=blog-client
+SERVER_BINARY=grpc-server
+CLIENT_BINARY=grpc-client
 
 # Build binaries
 build: build-server build-client
