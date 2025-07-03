@@ -107,13 +107,14 @@ func (x *BlogPost) GetTags() []string {
 }
 
 type CreatePostRequest struct {
-	state         protoimpl.MessageState `protogen:"open.v1"`
-	Title         string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
-	Content       string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
-	Author        string                 `protobuf:"bytes,3,opt,name=author,proto3" json:"author,omitempty"`
-	Tags          []string               `protobuf:"bytes,4,rep,name=tags,proto3" json:"tags,omitempty"`
-	unknownFields protoimpl.UnknownFields
-	sizeCache     protoimpl.SizeCache
+	state           protoimpl.MessageState `protogen:"open.v1"`
+	Title           string                 `protobuf:"bytes,1,opt,name=title,proto3" json:"title,omitempty"`
+	Content         string                 `protobuf:"bytes,2,opt,name=content,proto3" json:"content,omitempty"`
+	Author          string                 `protobuf:"bytes,3,opt,name=author,proto3" json:"author,omitempty"`
+	PublicationDate *timestamppb.Timestamp `protobuf:"bytes,4,opt,name=publication_date,json=publicationDate,proto3" json:"publication_date,omitempty"`
+	Tags            []string               `protobuf:"bytes,5,rep,name=tags,proto3" json:"tags,omitempty"`
+	unknownFields   protoimpl.UnknownFields
+	sizeCache       protoimpl.SizeCache
 }
 
 func (x *CreatePostRequest) Reset() {
@@ -165,6 +166,13 @@ func (x *CreatePostRequest) GetAuthor() string {
 		return x.Author
 	}
 	return ""
+}
+
+func (x *CreatePostRequest) GetPublicationDate() *timestamppb.Timestamp {
+	if x != nil {
+		return x.PublicationDate
+	}
+	return nil
 }
 
 func (x *CreatePostRequest) GetTags() []string {
@@ -558,12 +566,13 @@ const file_blog_proto_rawDesc = "" +
 	"\acontent\x18\x03 \x01(\tR\acontent\x12\x16\n" +
 	"\x06author\x18\x04 \x01(\tR\x06author\x12E\n" +
 	"\x10publication_date\x18\x05 \x01(\v2\x1a.google.protobuf.TimestampR\x0fpublicationDate\x12\x12\n" +
-	"\x04tags\x18\x06 \x03(\tR\x04tags\"o\n" +
+	"\x04tags\x18\x06 \x03(\tR\x04tags\"\xb6\x01\n" +
 	"\x11CreatePostRequest\x12\x14\n" +
 	"\x05title\x18\x01 \x01(\tR\x05title\x12\x18\n" +
 	"\acontent\x18\x02 \x01(\tR\acontent\x12\x16\n" +
-	"\x06author\x18\x03 \x01(\tR\x06author\x12\x12\n" +
-	"\x04tags\x18\x04 \x03(\tR\x04tags\"N\n" +
+	"\x06author\x18\x03 \x01(\tR\x06author\x12E\n" +
+	"\x10publication_date\x18\x04 \x01(\v2\x1a.google.protobuf.TimestampR\x0fpublicationDate\x12\x12\n" +
+	"\x04tags\x18\x05 \x03(\tR\x04tags\"N\n" +
 	"\x12CreatePostResponse\x12\"\n" +
 	"\x04post\x18\x01 \x01(\v2\x0e.blog.BlogPostR\x04post\x12\x14\n" +
 	"\x05error\x18\x02 \x01(\tR\x05error\"*\n" +
@@ -622,22 +631,23 @@ var file_blog_proto_goTypes = []any{
 }
 var file_blog_proto_depIdxs = []int32{
 	9, // 0: blog.BlogPost.publication_date:type_name -> google.protobuf.Timestamp
-	0, // 1: blog.CreatePostResponse.post:type_name -> blog.BlogPost
-	0, // 2: blog.ReadPostResponse.post:type_name -> blog.BlogPost
-	0, // 3: blog.UpdatePostResponse.post:type_name -> blog.BlogPost
-	1, // 4: blog.BlogService.CreatePost:input_type -> blog.CreatePostRequest
-	3, // 5: blog.BlogService.ReadPost:input_type -> blog.ReadPostRequest
-	5, // 6: blog.BlogService.UpdatePost:input_type -> blog.UpdatePostRequest
-	7, // 7: blog.BlogService.DeletePost:input_type -> blog.DeletePostRequest
-	2, // 8: blog.BlogService.CreatePost:output_type -> blog.CreatePostResponse
-	4, // 9: blog.BlogService.ReadPost:output_type -> blog.ReadPostResponse
-	6, // 10: blog.BlogService.UpdatePost:output_type -> blog.UpdatePostResponse
-	8, // 11: blog.BlogService.DeletePost:output_type -> blog.DeletePostResponse
-	8, // [8:12] is the sub-list for method output_type
-	4, // [4:8] is the sub-list for method input_type
-	4, // [4:4] is the sub-list for extension type_name
-	4, // [4:4] is the sub-list for extension extendee
-	0, // [0:4] is the sub-list for field type_name
+	9, // 1: blog.CreatePostRequest.publication_date:type_name -> google.protobuf.Timestamp
+	0, // 2: blog.CreatePostResponse.post:type_name -> blog.BlogPost
+	0, // 3: blog.ReadPostResponse.post:type_name -> blog.BlogPost
+	0, // 4: blog.UpdatePostResponse.post:type_name -> blog.BlogPost
+	1, // 5: blog.BlogService.CreatePost:input_type -> blog.CreatePostRequest
+	3, // 6: blog.BlogService.ReadPost:input_type -> blog.ReadPostRequest
+	5, // 7: blog.BlogService.UpdatePost:input_type -> blog.UpdatePostRequest
+	7, // 8: blog.BlogService.DeletePost:input_type -> blog.DeletePostRequest
+	2, // 9: blog.BlogService.CreatePost:output_type -> blog.CreatePostResponse
+	4, // 10: blog.BlogService.ReadPost:output_type -> blog.ReadPostResponse
+	6, // 11: blog.BlogService.UpdatePost:output_type -> blog.UpdatePostResponse
+	8, // 12: blog.BlogService.DeletePost:output_type -> blog.DeletePostResponse
+	9, // [9:13] is the sub-list for method output_type
+	5, // [5:9] is the sub-list for method input_type
+	5, // [5:5] is the sub-list for extension type_name
+	5, // [5:5] is the sub-list for extension extendee
+	0, // [0:5] is the sub-list for field type_name
 }
 
 func init() { file_blog_proto_init() }

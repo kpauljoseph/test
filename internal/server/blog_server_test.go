@@ -3,9 +3,11 @@ package server
 import (
 	"context"
 	"testing"
+	"time"
 
 	"github.com/kpauljoseph/test/internal/storage"
 	proto "github.com/kpauljoseph/test/proto"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestBlogServer_CreatePost(t *testing.T) {
@@ -21,36 +23,50 @@ func TestBlogServer_CreatePost(t *testing.T) {
 		{
 			name: "valid post creation",
 			req: &proto.CreatePostRequest{
-				Title:   "Test Post",
-				Content: "This is test content",
-				Author:  "Test Author",
-				Tags:    []string{"test", "golang"},
+				Title:           "Test Post",
+				Content:         "This is test content",
+				Author:          "Test Author",
+				PublicationDate: timestamppb.New(time.Now()),
+				Tags:            []string{"test", "golang"},
 			},
 			wantErr: false,
 		},
 		{
 			name: "missing title",
 			req: &proto.CreatePostRequest{
-				Content: "This is test content",
-				Author:  "Test Author",
-				Tags:    []string{"test"},
+				Content:         "This is test content",
+				Author:          "Test Author",
+				PublicationDate: timestamppb.New(time.Now()),
+				Tags:            []string{"test"},
 			},
 			wantErr: true,
 		},
 		{
 			name: "missing content",
 			req: &proto.CreatePostRequest{
-				Title:  "Test Post",
-				Author: "Test Author",
-				Tags:   []string{"test"},
+				Title:           "Test Post",
+				Author:          "Test Author",
+				PublicationDate: timestamppb.New(time.Now()),
+				Tags:            []string{"test"},
 			},
 			wantErr: true,
 		},
 		{
 			name: "missing author",
 			req: &proto.CreatePostRequest{
+				Title:           "Test Post",
+				Content:         "This is test content",
+				PublicationDate: timestamppb.New(time.Now()),
+				Tags:            []string{"test"},
+			},
+			wantErr: true,
+		},
+		{
+			name: "missing publication date",
+			req: &proto.CreatePostRequest{
 				Title:   "Test Post",
 				Content: "This is test content",
+				Author:  "Test Author",
 				Tags:    []string{"test"},
 			},
 			wantErr: true,
@@ -58,9 +74,10 @@ func TestBlogServer_CreatePost(t *testing.T) {
 		{
 			name: "valid post without tags",
 			req: &proto.CreatePostRequest{
-				Title:   "Test Post",
-				Content: "This is test content",
-				Author:  "Test Author",
+				Title:           "Test Post",
+				Content:         "This is test content",
+				Author:          "Test Author",
+				PublicationDate: timestamppb.New(time.Now()),
 			},
 			wantErr: false,
 		},
@@ -108,7 +125,7 @@ func TestBlogServer_ReadPost(t *testing.T) {
 	server := NewBlogServer(memoryStorage)
 	ctx := context.Background()
 
-	post, err := memoryStorage.CreatePost("Test Post", "Test Content", "Test Author", []string{"test"})
+	post, err := memoryStorage.CreatePost("Test Post", "Test Content", "Test Author", timestamppb.New(time.Now()), []string{"test"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -177,7 +194,7 @@ func TestBlogServer_UpdatePost(t *testing.T) {
 	server := NewBlogServer(memoryStorage)
 	ctx := context.Background()
 
-	post, err := memoryStorage.CreatePost("Original Title", "Original Content", "Original Author", []string{"original"})
+	post, err := memoryStorage.CreatePost("Original Title", "Original Content", "Original Author", timestamppb.New(time.Now()), []string{"original"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -287,7 +304,7 @@ func TestBlogServer_DeletePost(t *testing.T) {
 	server := NewBlogServer(memoryStorage)
 	ctx := context.Background()
 
-	post, err := memoryStorage.CreatePost("Test Post", "Test Content", "Test Author", []string{"test"})
+	post, err := memoryStorage.CreatePost("Test Post", "Test Content", "Test Author", timestamppb.New(time.Now()), []string{"test"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -358,10 +375,11 @@ func TestBlogServer_Integration(t *testing.T) {
 
 	t.Run("full CRUD workflow", func(t *testing.T) {
 		createReq := &proto.CreatePostRequest{
-			Title:   "Integration Test Post",
-			Content: "This is an integration test",
-			Author:  "Test Author",
-			Tags:    []string{"integration", "test"},
+			Title:           "Integration Test Post",
+			Content:         "This is an integration test",
+			Author:          "Test Author",
+			PublicationDate: timestamppb.New(time.Now()),
+			Tags:            []string{"integration", "test"},
 		}
 		createResp, err := server.CreatePost(ctx, createReq)
 		if err != nil {

@@ -3,7 +3,6 @@ package storage
 import (
 	"fmt"
 	"sync"
-	"time"
 
 	"github.com/google/uuid"
 	proto "github.com/kpauljoseph/test/proto"
@@ -21,7 +20,7 @@ func NewMemoryStorage() *MemoryStorage {
 	}
 }
 
-func (s *MemoryStorage) CreatePost(title, content, author string, tags []string) (*proto.BlogPost, error) {
+func (s *MemoryStorage) CreatePost(title, content, author string, publicationDate *timestamppb.Timestamp, tags []string) (*proto.BlogPost, error) {
 	s.mu.Lock()
 	defer s.mu.Unlock()
 
@@ -30,7 +29,7 @@ func (s *MemoryStorage) CreatePost(title, content, author string, tags []string)
 		Title:           title,
 		Content:         content,
 		Author:          author,
-		PublicationDate: timestamppb.New(time.Now()),
+		PublicationDate: publicationDate,
 		Tags:            tags,
 	}
 

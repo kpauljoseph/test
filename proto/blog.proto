@@ -26,7 +26,8 @@ message CreatePostRequest {
   string title = 1;
   string content = 2;
   string author = 3;
-  repeated string tags = 4;
+  google.protobuf.Timestamp publication_date = 4;
+  repeated string tags = 5;
 }
 
 message CreatePostResponse {

@@ -3,6 +3,8 @@ package storage
 import (
 	"testing"
 	"time"
+
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 func TestMemoryStorage_CreatePost(t *testing.T) {
@@ -33,7 +35,8 @@ func TestMemoryStorage_CreatePost(t *testing.T) {
 
 	for _, tt := range tests {
 		t.Run(tt.name, func(t *testing.T) {
-			post, err := storage.CreatePost(tt.title, tt.content, tt.author, tt.tags)
+			pubDate := timestamppb.New(time.Now())
+			post, err := storage.CreatePost(tt.title, tt.content, tt.author, pubDate, tt.tags)
 			if err != nil {
 				t.Errorf("CreatePost() error = %v", err)
 				return
@@ -64,7 +67,7 @@ func TestMemoryStorage_CreatePost(t *testing.T) {
 func TestMemoryStorage_GetPost(t *testing.T) {
 	storage := NewMemoryStorage()
 
-	post, err := storage.CreatePost("Test", "Content", "Author", []string{"tag"})
+	post, err := storage.CreatePost("Test", "Content", "Author", timestamppb.New(time.Now()), []string{"tag"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -103,7 +106,7 @@ func TestMemoryStorage_GetPost(t *testing.T) {
 func TestMemoryStorage_UpdatePost(t *testing.T) {
 	storage := NewMemoryStorage()
 
-	post, err := storage.CreatePost("Original", "Original Content", "Original Author", []string{"original"})
+	post, err := storage.CreatePost("Original", "Original Content", "Original Author", timestamppb.New(time.Now()), []string{"original"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -163,7 +166,7 @@ func TestMemoryStorage_UpdatePost(t *testing.T) {
 func TestMemoryStorage_DeletePost(t *testing.T) {
 	storage := NewMemoryStorage()
 
-	post, err := storage.CreatePost("Test", "Content", "Author", []string{"tag"})
+	post, err := storage.CreatePost("Test", "Content", "Author", timestamppb.New(time.Now()), []string{"tag"})
 	if err != nil {
 		t.Fatalf("Failed to create test post: %v", err)
 	}
@@ -211,7 +214,7 @@ func TestMemoryStorage_ConcurrentAccess(t *testing.T) {
 		go func(id int) {
 			defer func() { done <- true }()
 
-			post, err := storage.CreatePost("Title", "Content", "Author", []string{"tag"})
+			post, err := storage.CreatePost("Title", "Content", "Author", timestamppb.New(time.Now()), []string{"tag"})
 			if err != nil {
 				t.Errorf("Concurrent CreatePost() failed: %v", err)
 				return

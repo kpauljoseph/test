@@ -37,8 +37,13 @@ func (s *BlogServer) CreatePost(ctx context.Context, req *proto.CreatePostReques
 			Error: "author is required",
 		}, nil
 	}
+	if req.PublicationDate == nil {
+		return &proto.CreatePostResponse{
+			Error: "publication_date is required",
+		}, nil
+	}
 
-	post, err := s.storage.CreatePost(req.Title, req.Content, req.Author, req.Tags)
+	post, err := s.storage.CreatePost(req.Title, req.Content, req.Author, req.PublicationDate, req.Tags)
 	if err != nil {
 		log.Printf("Failed to create post: %v", err)
 		return &proto.CreatePostResponse{

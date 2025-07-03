@@ -8,6 +8,7 @@ import (
 	proto "github.com/kpauljoseph/test/proto"
 	"google.golang.org/grpc"
 	"google.golang.org/grpc/credentials/insecure"
+	"google.golang.org/protobuf/types/known/timestamppb"
 )
 
 const (
@@ -64,10 +65,11 @@ func createPost(ctx context.Context, client proto.BlogServiceClient, title, cont
 	log.Printf("Creating post: title='%s', author='%s'", title, author)
 
 	req := &proto.CreatePostRequest{
-		Title:   title,
-		Content: content,
-		Author:  author,
-		Tags:    tags,
+		Title:           title,
+		Content:         content,
+		Author:          author,
+		PublicationDate: timestamppb.New(time.Now()),
+		Tags:            tags,
 	}
 
 	resp, err := client.CreatePost(ctx, req)
@@ -85,6 +87,7 @@ func createPost(ctx context.Context, client proto.BlogServiceClient, title, cont
 	log.Printf("Post created successfully!")
 	log.Printf("  PostID: %s", post.PostId)
 	log.Printf("  Title: %s", post.Title)
+	log.Printf("  Content: %s", post.Content)
 	log.Printf("  Author: %s", post.Author)
 	log.Printf("  Publication Date: %s", post.PublicationDate.AsTime().Format(time.RFC3339))
 	log.Printf("  Tags: %v", post.Tags)
@@ -114,8 +117,8 @@ func readPost(ctx context.Context, client proto.BlogServiceClient, postID string
 	log.Printf("Post found!")
 	log.Printf("  PostID: %s", post.PostId)
 	log.Printf("  Title: %s", post.Title)
-	log.Printf("  Author: %s", post.Author)
 	log.Printf("  Content: %s", post.Content)
+	log.Printf("  Author: %s", post.Author)
 	log.Printf("  Publication Date: %s", post.PublicationDate.AsTime().Format(time.RFC3339))
 	log.Printf("  Tags: %v", post.Tags)
 }
@@ -146,7 +149,9 @@ func updatePost(ctx context.Context, client proto.BlogServiceClient, postID, tit
 	log.Printf("Post updated successfully!")
 	log.Printf("  PostID: %s", post.PostId)
 	log.Printf("  Title: %s", post.Title)
+	log.Printf("  Content: %s", post.Content)
 	log.Printf("  Author: %s", post.Author)
+	log.Printf("  Publication Date: %s", post.PublicationDate.AsTime().Format(time.RFC3339))
 	log.Printf("  Tags: %v", post.Tags)
 }
 
